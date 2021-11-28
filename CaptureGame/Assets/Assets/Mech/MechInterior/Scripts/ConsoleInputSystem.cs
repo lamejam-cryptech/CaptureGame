@@ -98,8 +98,11 @@ public class ConsoleInputSystem : MonoBehaviour
     string command = "";
     const char emptyChar = char.MaxValue;
 
+    ItemList tradeables;
+    Inventory inventory;
     public void Start()
     {
+        inventory = new Inventory(tradeables.obj);
         screen = new char[charLimit[0]][];
         for(int x = 0; x < charLimit[0]; x++)
         {
@@ -109,6 +112,8 @@ public class ConsoleInputSystem : MonoBehaviour
                 screen[x][y] = emptyChar;
             }
         }
+
+        addString("Mech initalized\n\n(type help to get commands)\n\n");
     }
 
     // Update is called once per frame
@@ -275,7 +280,14 @@ public class ConsoleInputSystem : MonoBehaviour
         shiftLineUp();
         for(int i1 =0; i1 < str.Length; i1++)
         {
-            addChar(str[i1]);
+            if (str[i1] == '\n')
+            {
+                shiftLineUp();
+            }
+            else
+            {
+                addChar(str[i1]);
+            }
         }
     }
 }
