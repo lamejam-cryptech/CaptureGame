@@ -18,6 +18,13 @@ public class ConsoleInputSystem : MonoBehaviour
 {
     [SerializeField]
     TextMeshProUGUI textArea;
+
+    [SerializeField]
+    MechMovementControler mech;
+
+    [SerializeField]
+    MechMovementControler camera;
+
     private int[] charLimit = new int[2] { 24, 14 };
 
     private keyCodeChar[] keyInputCodes = new keyCodeChar[]

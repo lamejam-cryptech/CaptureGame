@@ -7,9 +7,6 @@ public class MechMovementControler : MonoBehaviour
     [SerializeField]
     private MechState state = MechState.STOP;
 
-    [SerializeField]
-    private GameObject cameras;
-
     private const float arrivalThreshold = 1;
 
     //settings
@@ -39,7 +36,7 @@ public class MechMovementControler : MonoBehaviour
                 moveDist();
                 break;
             case MechState.ROTATE:
-                rotate(this.cameras.transform);
+                rotate();
                 break;
             case MechState.STOP:
                 //get new command
@@ -56,9 +53,9 @@ public class MechMovementControler : MonoBehaviour
         state = MechState.ROTATE;
     }
 
-    private void rotate(Transform target)
+    private void rotate()
     {
-        Vector3 tmp = target.transform.eulerAngles;
+        Vector3 tmp = this.transform.eulerAngles;
 
         if (Mathf.Abs(rotatedTravel - rotatedGoal) > arrivalThreshold)
         {
@@ -72,7 +69,7 @@ public class MechMovementControler : MonoBehaviour
             rotatedTravel = 0;
             this.state = MechState.STOP;
         }
-        target.transform.eulerAngles = tmp;
+        this.transform.eulerAngles = tmp;
     }
 
     //distance travel functions

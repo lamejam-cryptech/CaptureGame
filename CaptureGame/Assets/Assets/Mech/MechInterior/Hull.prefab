@@ -406,7 +406,6 @@ GameObject:
   - component: {fileID: 4906357065170180604}
   - component: {fileID: 7914384245418892815}
   - component: {fileID: 1139393817499809055}
-  - component: {fileID: 2781653090482441221}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -530,19 +529,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2781653090482441221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1535819897541149013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2142cc6f21829f4fb863ff5953ca5b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textArea: {fileID: 1139393817499809055}
 --- !u!1 &1614142424624502810
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,6 +1902,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5961726020328154569}
+  - component: {fileID: 7003486031667074142}
   m_Layer: 8
   m_Name: Hull
   m_TagString: Untagged
@@ -1950,6 +1937,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7003486031667074142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6482824555762859891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2142cc6f21829f4fb863ff5953ca5b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textArea: {fileID: 1139393817499809055}
+  movementControler: {fileID: 0}
 --- !u!1 &6914010132259471036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2436,14 +2437,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3919e14234b41d4bbc07c3425011e6b, type: 3}
---- !u!4 &2609474077706446295 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3910346950178831351, guid: d3919e14234b41d4bbc07c3425011e6b, type: 3}
-  m_PrefabInstance: {fileID: 1329372282987519520}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1583112512231307723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d3919e14234b41d4bbc07c3425011e6b, type: 3}
+  m_PrefabInstance: {fileID: 1329372282987519520}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2609474077706446295 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3910346950178831351, guid: d3919e14234b41d4bbc07c3425011e6b, type: 3}
   m_PrefabInstance: {fileID: 1329372282987519520}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1420940400237701452
