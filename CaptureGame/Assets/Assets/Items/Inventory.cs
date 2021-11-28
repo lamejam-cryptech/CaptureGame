@@ -57,12 +57,25 @@ public class Inventory
 
 	public string ToString()
     {
-		string returnString = "";
+		/*
 		int[] keys = (new List<int>(this.obj.Keys)).ToArray();
 		for (int i = 0; i < Math.Min(obj.Count, 14); i++)
 		{
 			returnString += ($"{obj[keys[i]].name}:{obj[keys[i]].number}\n");
 		}
 		return returnString.Substring(0,returnString.Length - 1);
+		*/
+		string returnString = "";
+		int i1 = 0;
+		foreach (KeyValuePair<int, Item> keyValues in obj)
+		{
+			if(i1 > 14)
+            {
+				break;
+            }
+			returnString += $"{keyValues.Value.name}:{keyValues.Value.number}\n";
+			i1++;
+		}
+		return returnString.Substring(0, returnString.Length - 1);
 	}
 }
