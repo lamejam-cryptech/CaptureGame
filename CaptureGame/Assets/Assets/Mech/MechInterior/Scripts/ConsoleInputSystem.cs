@@ -1,16 +1,18 @@
-﻿using System.Collections;
+﻿using RobotBrain;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 struct keyCodeChar
 {
-    public keyCodeChar(KeyCode k, char c)
+    public keyCodeChar(string k, char c)
     {
         code = k;
         val = c;
     }
-    public KeyCode code;
+    public string code;
     public char val;
 }
 
@@ -25,57 +27,77 @@ public class ConsoleInputSystem : MonoBehaviour
     [SerializeField]
     MechMovementControler camera;
 
+    private RobotBrain.Brain brain = new RobotBrain.Brain();
+
     private int[] charLimit = new int[2] { 24, 14 };
 
     private keyCodeChar[] keyInputCodes = new keyCodeChar[]
     {
-        new keyCodeChar(KeyCode.A, 'A'),
-        new keyCodeChar(KeyCode.B, 'B'),
-        new keyCodeChar(KeyCode.C, 'C'),
-        new keyCodeChar(KeyCode.D, 'D'),
-        new keyCodeChar(KeyCode.E, 'E'),
-        new keyCodeChar(KeyCode.F, 'F'),
-        new keyCodeChar(KeyCode.G, 'G'),
-        new keyCodeChar(KeyCode.H, 'H'),
-        new keyCodeChar(KeyCode.I, 'I'),
-        new keyCodeChar(KeyCode.J, 'J'),
-        new keyCodeChar(KeyCode.K, 'K'),
-        new keyCodeChar(KeyCode.L, 'L'),
-        new keyCodeChar(KeyCode.M, 'M'),
-        new keyCodeChar(KeyCode.N, 'N'),
-        new keyCodeChar(KeyCode.O, 'O'),
-        new keyCodeChar(KeyCode.P, 'P'),
-        new keyCodeChar(KeyCode.Q, 'Q'),
-        new keyCodeChar(KeyCode.R, 'R'),
-        new keyCodeChar(KeyCode.S, 'S'),
-        new keyCodeChar(KeyCode.T, 'T'),
-        new keyCodeChar(KeyCode.U, 'U'),
-        new keyCodeChar(KeyCode.V, 'V'),
-        new keyCodeChar(KeyCode.W, 'W'),
-        new keyCodeChar(KeyCode.X, 'X'),
-        new keyCodeChar(KeyCode.Y, 'Y'),
-        new keyCodeChar(KeyCode.Z, 'Z'),
+        new keyCodeChar("a", 'A'),
+        new keyCodeChar("b", 'B'),
+        new keyCodeChar("c", 'C'),
+        new keyCodeChar("d", 'D'),
+        new keyCodeChar("e", 'E'),
+        new keyCodeChar("f", 'F'),
+        new keyCodeChar("g", 'G'),
+        new keyCodeChar("h", 'H'),
+        new keyCodeChar("i", 'I'),
+        new keyCodeChar("j", 'J'),
+        new keyCodeChar("k", 'K'),
+        new keyCodeChar("l", 'L'),
+        new keyCodeChar("m", 'M'),
+        new keyCodeChar("n", 'N'),
+        new keyCodeChar("o", 'O'),
+        new keyCodeChar("p", 'P'),
+        new keyCodeChar("q", 'Q'),
+        new keyCodeChar("r", 'R'),
+        new keyCodeChar("s", 'S'),
+        new keyCodeChar("t", 'T'),
+        new keyCodeChar("u", 'U'),
+        new keyCodeChar("v", 'V'),
+        new keyCodeChar("w", 'W'),
+        new keyCodeChar("x", 'X'),
+        new keyCodeChar("y", 'Y'),
+        new keyCodeChar("z", 'Z'),
 
-        new keyCodeChar(KeyCode.Keypad0, '0'),
-        new keyCodeChar(KeyCode.Keypad1, '1'),
-        new keyCodeChar(KeyCode.Keypad2, '2'),
-        new keyCodeChar(KeyCode.Keypad3, '3'),
-        new keyCodeChar(KeyCode.Keypad4, '4'),
-        new keyCodeChar(KeyCode.Keypad5, '5'),
-        new keyCodeChar(KeyCode.Keypad6, '6'),
-        new keyCodeChar(KeyCode.Keypad7, '7'),
-        new keyCodeChar(KeyCode.Keypad8, '8'),
-        new keyCodeChar(KeyCode.Keypad9, '9'),
+        new keyCodeChar("0", '0'),
+        new keyCodeChar("1", '1'),
+        new keyCodeChar("2", '2'),
+        new keyCodeChar("3", '3'),
+        new keyCodeChar("4", '4'),
+        new keyCodeChar("5", '5'),
+        new keyCodeChar("6", '6'),
+        new keyCodeChar("7", '7'),
+        new keyCodeChar("8", '8'),
+        new keyCodeChar("9", '9'),
 
-        new keyCodeChar(KeyCode.Space, ' '),
+        new keyCodeChar("[0]", '0'),
+        new keyCodeChar("[1]", '1'),
+        new keyCodeChar("[2]", '2'),
+        new keyCodeChar("[3]", '3'),
+        new keyCodeChar("[4]", '4'),
+        new keyCodeChar("[5]", '5'),
+        new keyCodeChar("[6]", '6'),
+        new keyCodeChar("[7]", '7'),
+        new keyCodeChar("[8]", '8'),
+        new keyCodeChar("[9]", '9'),
+
+        new keyCodeChar("space", ' '),
+        new keyCodeChar("-", '-'),
+        new keyCodeChar("=", '='),
     };
 
+    private keyCodeChar[] shiftKeyInputCodes = new keyCodeChar[]
+    {
+        new keyCodeChar("7", '&'),
+        new keyCodeChar("9", '('),
+        new keyCodeChar("0", ')'),
+    };
     private char[][] screen; 
 
     string command = "";
     const char emptyChar = char.MaxValue;
 
-    private float coolDownTime = -1;
     public void Start()
     {
         screen = new char[charLimit[0]][];
@@ -92,14 +114,28 @@ public class ConsoleInputSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        for(int i1 = 0; i1 < keyInputCodes.Length; i1++)
+
+        if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
         {
-            if(Input.GetKeyUp(keyInputCodes[i1].code))
+            for (int i1 = 0; i1 < shiftKeyInputCodes.Length; i1++)
             {
-                addChar(keyInputCodes[i1].val);
+                if (Input.GetKeyUp(shiftKeyInputCodes[i1].code))
+                {
+                    addChar(shiftKeyInputCodes[i1].val);
+                }
             }
         }
+        else
+        {
+            for (int i1 = 0; i1 < keyInputCodes.Length; i1++)
+            {
+                if (Input.GetKeyUp(keyInputCodes[i1].code))
+                {
+                    addChar(keyInputCodes[i1].val);
+                }
+            }
+        }
+        
         if(Input.GetKeyUp(KeyCode.Backspace))
         {
             backSpace();
@@ -110,11 +146,40 @@ public class ConsoleInputSystem : MonoBehaviour
         }
         else if(Input.GetKeyUp(KeyCode.Return))
         {
-            //do something with the comand
+            command = command.Replace('\n', ' ');
+            command += $"\n";
+            print(command);
+            brain.processLine(command.ToLower());
+
+            
+
+            print(brain.hasCommands());
+            //print();
             shiftLineUp();
             command = "";
         }
         textArea.text = screenToString();
+
+        if(brain.hasCommands())
+        {
+            switch(brain.peekCommand())
+            {
+                case MechCommand.MechRotate rotCmd:
+                    if(mech.getState() == MechState.STOP)
+                    {
+                        mech.setRot(rotCmd.angle);
+                        brain.nextCommand();
+                    }
+                    break;
+                case MechCommand.MechMove movCmd:
+                    if (mech.getState() == MechState.STOP)
+                    {
+                        mech.setDist(movCmd.distance);
+                        brain.nextCommand();
+                    }
+                    break;
+            }
+        }
     }
 
     private string screenToString()
@@ -205,5 +270,12 @@ public class ConsoleInputSystem : MonoBehaviour
         shiftLineUp();
         screen[0][0] = c;
     }
-
+    void addString(string str)
+    {
+        shiftLineUp();
+        for(int i1 =0; i1 < str.Length; i1++)
+        {
+            addChar(str[i1]);
+        }
+    }
 }

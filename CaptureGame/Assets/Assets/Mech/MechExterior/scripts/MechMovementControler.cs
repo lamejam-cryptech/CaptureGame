@@ -18,10 +18,14 @@ public class MechMovementControler : MonoBehaviour
     private float camRotationSpeed = 10;
 
     //temporay variables
+    [SerializeField]
     private float distTravel = 0;
+    [SerializeField]
     private float distGoal = 0;
 
+    [SerializeField]
     private float rotatedTravel = 0;
+    [SerializeField]
     private float rotatedGoal = 0;
 
     public void Update()
@@ -43,7 +47,7 @@ public class MechMovementControler : MonoBehaviour
     }
 
     //rotate functions
-    private void setRot(float goal)
+    public void setRot(float goal)
     {
         rotatedGoal = (goal % 360);
         state = MechState.ROTATE;
@@ -69,25 +73,43 @@ public class MechMovementControler : MonoBehaviour
     }
 
     //distance travel functions
-    private void setDist(float goal)
+    public void setDist(float goal)
     {
         distGoal = goal;
         this.state = MechState.MOVE;
     }
+
     private void moveDist()
     {
-        if(Mathf.Abs(distTravel - distGoal) > arrivalThreshold)
+        bool hit = Physics.CheckSphere
+            (
+                this.transform.position + this.transform.forward * mechSpeed * Time.deltaTime,
+                2.0f,
+                2147482111
+            );
+
+        if (!hit)
         {
-            distTravel += mechSpeed * getDir(distTravel, distGoal) * Time.deltaTime;
-            this.transform.position += this.transform.forward * getDir(distTravel, distGoal) * mechSpeed * Time.deltaTime;
+            if (Mathf.Abs(distTravel - distGoal) > arrivalThreshold)
+            {
+                distTravel += mechSpeed * getDir(distTravel, distGoal) * Time.deltaTime;
+                this.transform.position += this.transform.forward * getDir(distTravel, distGoal) * mechSpeed * Time.deltaTime;
+            }
+            else
+            {
+                this.transform.position += this.transform.forward * getDir(distTravel, distGoal) * Mathf.Abs(distTravel - distGoal);
+                distGoal = 0;
+                distTravel = 0;
+                this.state = MechState.STOP;
+            }
         }
         else
         {
-            this.transform.position += this.transform.forward * getDir(distTravel, distGoal) * Mathf.Abs(distTravel - distGoal);
             distGoal = 0;
             distTravel = 0;
             this.state = MechState.STOP;
         }
+        
     }
 
     private float getDir(float cur, float goal)
@@ -98,4 +120,10 @@ public class MechMovementControler : MonoBehaviour
         }
         return -1;
     }
+
+    public MechState getState()
+    {
+        return this.state;
+    }
+
 }
