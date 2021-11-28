@@ -24,10 +24,6 @@ public class MechMovementControler : MonoBehaviour
     private float rotatedTravel = 0;
     private float rotatedGoal = 0;
 
-    public void Start()
-    {
-    }
-
     public void Update()
     {
         switch(state)
@@ -49,7 +45,7 @@ public class MechMovementControler : MonoBehaviour
     //rotate functions
     private void setRot(float goal)
     {
-        rotatedGoal = goal % 360;
+        rotatedGoal = (goal % 360);
         state = MechState.ROTATE;
     }
 
