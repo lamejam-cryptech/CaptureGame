@@ -16,17 +16,23 @@ public class City : MonoBehaviour
     [SerializeField]
     Vector2 offset;
 
+    [SerializeField]
+    int key;
+
+    System.Random rand;
+
     // Start is called before the first frame update
     void Start()
     {
+        rand = new System.Random(key);
         for(float x = startPos.x; x <= endPos.x; x+=delta.x)
         {
-            for(float y = 0; y <= startPos.y; y+= delta.y)
+            for(float y = startPos.y; y <= endPos.y; y+= delta.y)
             {
                 Instantiate(
-                    b.BuildingPrefabs[0],
+                    b.BuildingPrefabs[rand.Next(0, b.BuildingPrefabs.Length)],
                     new Vector3(x + offset.x, 0, y + offset.y),
-                    Quaternion.Euler(0, 0, 0)
+                    Quaternion.Euler(-90f, rand.Next(0,4) * 90f, 0)
                     , this.transform);
             }
         }

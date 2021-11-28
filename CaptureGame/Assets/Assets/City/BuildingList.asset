@@ -12,3 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4698a1a777c9f645a3b6b594003b4f7, type: 3}
   m_Name: BuildingList
   m_EditorClassIdentifier: 
+  BuildingPrefabs:
+  - {fileID: 7151622170657554270, guid: 0c95d1e49349d33469f69614944e6178, type: 3}
+  - {fileID: 5521767554749212246, guid: 7630f40204276304bb5edac548db6d22, type: 3}
+  - {fileID: 6501791126045907363, guid: 3519e63da7edbcb4fb37384d4c09d8b6, type: 3}
+  - {fileID: 1454245291982484722, guid: 33e6db30cc4219d498164bc32e4756c0, type: 3}
+  - {fileID: 5596391688897803237, guid: 2876d3f94c6f47c458bbc415429be80c, type: 3}
+  - {fileID: 3109429041258546986, guid: e4bc9bee5cc9d9e4e96a341ec53d18df, type: 3}
