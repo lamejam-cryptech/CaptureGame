@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5909287393074490633}
   - component: {fileID: 5909287393074490632}
+  - component: {fileID: 7110213933661734352}
   m_Layer: 0
   m_Name: City
   m_TagString: Untagged
@@ -51,6 +52,19 @@ MonoBehaviour:
   delta: {x: 5, y: 5}
   offset: {x: -25, y: 0}
   key: 0
+--- !u!65 &7110213933661734352
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909287393074490639}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 40, y: 5, z: 40}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &5909287393247202596
 GameObject:
   m_ObjectHideFlags: 0
