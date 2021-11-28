@@ -9,7 +9,6 @@ public class CompassScreen : MonoBehaviour
 
     public float bearing;
 
-
     public void Update()
     {
         compassBearings.localEulerAngles = new Vector3(0, 0, bearing);
