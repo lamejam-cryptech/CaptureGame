@@ -27,6 +27,11 @@ public class ConsoleInputSystem : MonoBehaviour
     [SerializeField]
     MechMovementControler camera;
 
+    [SerializeField]
+    Queue<MechCommand> movementQueue = new Queue<MechCommand>();
+    [SerializeField]
+    Queue<MechCommand> instantQueue = new Queue<MechCommand>();
+
     private RobotBrain.Brain brain = new RobotBrain.Brain();
 
     private int[] charLimit = new int[2] { 24, 14 };
@@ -98,8 +103,12 @@ public class ConsoleInputSystem : MonoBehaviour
     string command = "";
     const char emptyChar = char.MaxValue;
 
+    [SerializeField]
     ItemList tradeables;
+    [SerializeField]
     Inventory inventory;
+
+    float credits = 1000;
     public void Start()
     {
         inventory = new Inventory(tradeables.obj);
@@ -113,20 +122,23 @@ public class ConsoleInputSystem : MonoBehaviour
             }
         }
 
-        addString("Mech initalized\n\n(type help to get commands)\n\n");
+        addString("Mech initalized\n\n(type help to get commands)\n\n".ToUpper());
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if(brain.shouldEndGame())
+        {
+            Application.Quit();
+        }
         if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
         {
             for (int i1 = 0; i1 < shiftKeyInputCodes.Length; i1++)
             {
                 if (Input.GetKeyUp(shiftKeyInputCodes[i1].code))
                 {
-                    addChar(shiftKeyInputCodes[i1].val);
+                    addChar(shiftKeyInputCodes[i1].val, true);
                 }
             }
         }
@@ -136,7 +148,7 @@ public class ConsoleInputSystem : MonoBehaviour
             {
                 if (Input.GetKeyUp(keyInputCodes[i1].code))
                 {
-                    addChar(keyInputCodes[i1].val);
+                    addChar(keyInputCodes[i1].val, true);
                 }
             }
         }
@@ -153,7 +165,6 @@ public class ConsoleInputSystem : MonoBehaviour
         {
             command = command.Replace('\n', ' ');
             command += $"\n";
-            print(command);
             brain.processLine(command.ToLower());
 
             
@@ -165,22 +176,126 @@ public class ConsoleInputSystem : MonoBehaviour
         }
         textArea.text = screenToString();
 
-        if(brain.hasCommands())
+        while (brain.hasErrors())
         {
-            switch(brain.peekCommand())
+            command = "";
+            shiftLineUp();
+            addString(brain.nextError().ToUpper() + "\n");
+        }
+
+        while (brain.hasStdOut())
+        {
+            command = "";
+            shiftLineUp();
+            addString(brain.nextStdOut().ToUpper() + "\n");
+        }
+
+        while (brain.hasCommands())
+        {
+            switch (brain.peekCommand())
             {
                 case MechCommand.MechRotate rotCmd:
-                    if(mech.getState() == MechState.STOP)
+                case MechCommand.MechMove movCmd:
+                    movementQueue.Enqueue(brain.nextCommand());
+                    break;
+                case MechCommand.MechBuy buyCmd:
+                case MechCommand.MechSell sellCmd:
+                case MechCommand.MechInventory inventoryCmd:
+                case MechCommand.MechMarketPrices marketCmd:
+                case MechCommand.MechCityPrices cityMarketCmd:
+                case MechCommand.MechStop stopCmd:
+                    instantQueue.Enqueue(brain.nextCommand());
+                    break;
+            }
+        }
+        //instant
+        RaycastHit[] hits;
+        while (instantQueue.Count > 0)
+        {
+            switch (instantQueue.Dequeue())
+            {
+                case MechCommand.MechStop stopCmd:
+                    mech.stop();
+                    break;
+
+                case MechCommand.MechInventory inventoryCmd:
+                    addString($"{inventory}");
+                    addString($"{credits} Credits");
+                    shiftLineUp();
+                    break;
+                case MechCommand.MechMarketPrices marketCmd:
+                case MechCommand.MechCityPrices cityMarketCmd:
+                    hits = Physics.SphereCastAll(mech.transform.position, 10, mech.transform.forward);
+
+                    for(int i1 = 0; i1 < hits.Length; i1++)
+                    {
+                        if(hits[i1].transform.GetComponent<City>() != null)
+                        {
+                            print(hits[i1].transform.GetComponent<City>().getMarket());
+                            addString(hits[i1].transform.GetComponent<City>().getMarket());
+                            break;
+                        }
+                    }
+                    break;
+                case MechCommand.MechBuy buyCmd:
+
+                    hits = Physics.SphereCastAll(mech.transform.position, 10, mech.transform.forward);
+                    for (int i1 = 0; i1 < hits.Length; i1++)
+                    {
+                        if (hits[i1].transform.GetComponent<City>() != null)
+                        {
+                            City c = hits[i1].transform.GetComponent<City>();
+                            if (c.buy(buyCmd.commodityId, ref this.credits, buyCmd.count, inventory))
+                            {
+                                addString("Succesfull Transaction\n");
+                            }
+                            else
+                            {
+                                addString("Failed Transaction\n");
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case MechCommand.MechSell sellCmd:
+                    
+                    hits = Physics.SphereCastAll(mech.transform.position, 10, mech.transform.forward);
+                    for (int i1 = 0; i1 < hits.Length; i1++)
+                    {
+                        if (hits[i1].transform.GetComponent<City>() != null)
+                        {
+                            City c = hits[i1].transform.GetComponent<City>();
+                            if (c.sell(sellCmd.commodityId, ref this.credits, sellCmd.count, inventory))
+                            {
+                                addString("Succesfull Transaction\n");
+                            }
+                            else
+                            {
+                                addString("Failed Transaction\n");
+                            }
+                            break;
+                        }
+                    }
+                    break;
+            }
+        }
+        //movement
+        if(movementQueue.Count > 0)
+        {
+            switch (movementQueue.Peek())
+            {
+                case MechCommand.MechRotate rotCmd:
+                    if (mech.getState() == MechState.STOP)
                     {
                         mech.setRot(rotCmd.angle);
-                        brain.nextCommand();
+                        movementQueue.Dequeue();
                     }
                     break;
                 case MechCommand.MechMove movCmd:
                     if (mech.getState() == MechState.STOP)
                     {
                         mech.setDist(movCmd.distance);
-                        brain.nextCommand();
+                        movementQueue.Dequeue();
                     }
                     break;
             }
@@ -261,9 +376,12 @@ public class ConsoleInputSystem : MonoBehaviour
             }
         }
     }
-    void addChar(char c)
+    void addChar(char c, bool addToCommand = false)
     {
-        command += $"{c}";
+        if(addToCommand)
+        {
+            command += $"{c}";
+        }
         for(int i1 = 0; i1 < charLimit[0]; i1++)
         {
             if(screen[i1][0] == emptyChar)

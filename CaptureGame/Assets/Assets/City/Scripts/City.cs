@@ -32,11 +32,14 @@ public class City : MonoBehaviour
     EconList tradables;
 
     [SerializeField]
-    private Inventory localEcon;
+    Inventory localEcon;
 
     [SerializeField]
-    private float updateTime = 1;
+    private float updateTime = 60;
     private float currentTime = 0;
+
+    [SerializeField]
+    GameObject player;
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +67,18 @@ public class City : MonoBehaviour
             tmp.productionRate += rand.Next(0, 100);
             tmp.number = rand.Next(0, 10) * pop + pop;
         }
+        float scaleFactor = 1;
+        if ((this.transform.position - player.transform.position).magnitude > 20f)
+        {
+            scaleFactor = 200f / ((this.transform.position - player.transform.position).magnitude - 19);
+        }
+            
+        scaleFactor = Mathf.Clamp(scaleFactor, 0, 1);
+        //this.transform.localScale = Vector3.one * scaleFactor;
+        //for(int i1 = 0; i1 < this.transform.childCount; i1++)
+        //{
+        //    this.transform.GetChild(i1).transform.localScale = Vector3.one * scaleFactor;
+        //}
     }
 
     // Update is called once per frame
@@ -93,5 +108,52 @@ public class City : MonoBehaviour
 
             localEcon.consume(i1,  -1*(Mathf.FloorToInt(produce - demand)));
         }
+    }
+
+    public string getMarket()
+    {
+        string returnString = "";
+        ItemEcon tmp;
+        int i2 = 0;
+        for (int i1 = 0; i1 < tradables.obj.Length; i1++)
+        {
+            if(i2 > 14)
+            {
+                break;
+            }
+            tmp = (ItemEcon)localEcon.getItem(tradables.obj[i1].id);
+            returnString += $"{tmp.id}:{tmp.name}:{tmp.number}:{tmp.price} Credits\n";
+        }
+        return returnString.Substring(0, returnString.Length);
+    }
+
+    public bool buy(int id, ref float credits, int number , Inventory player)
+    {
+        ItemEcon tmp = (ItemEcon) localEcon.getItem(id);
+        if(credits < tmp.price * number)
+        {
+            return false;
+        }
+        if(number > tmp.number)
+        {
+            return false;
+        }
+        tmp.number -= number;//local
+        player.getItem(id).number += number;//player
+        credits -= number * ((ItemEcon)localEcon.getItem(id)).price;
+        //localEcon.transfer(player, id, number);
+        return true;
+    }
+    public bool sell(int id, ref float credits, int number, Inventory player)
+    {
+        Item tmp = player.getItem(id);
+        if (number > tmp.number)
+        {
+            return false;
+        }
+        tmp.number -= number;//player
+        localEcon.getItem(id).number += number;//local
+        credits += number * ((ItemEcon)localEcon.getItem(id)).price;
+        return true;
     }
 }

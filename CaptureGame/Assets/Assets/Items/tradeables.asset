@@ -10,6 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 770cf9e75a9658847938f2623c7c6810, type: 3}
-  m_Name: Tradeables
+  m_Name: tradeables
   m_EditorClassIdentifier: 
-  obj: []
+  obj:
+  - name: Food
+    id: 0
+    number: 0
+  - name: Fuel Cell
+    id: 1
+    number: 0

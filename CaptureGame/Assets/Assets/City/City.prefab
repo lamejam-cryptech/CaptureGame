@@ -51,9 +51,10 @@ MonoBehaviour:
   endPos: {x: 15, y: 15}
   delta: {x: 5, y: 5}
   offset: {x: -25, y: 0}
-  key: 0
-  tradables: {fileID: 11400000, guid: ef76ae511e243a74c9e771f34b6c28b1, type: 2}
-  localEcon: []
+  key: 253
+  pop: 100
+  tradables: {fileID: 11400000, guid: 30ec4920c9c7ca643a1c9800f0fc8149, type: 2}
+  updateTime: 10
 --- !u!65 &7110213933661734352
 BoxCollider:
   m_ObjectHideFlags: 0

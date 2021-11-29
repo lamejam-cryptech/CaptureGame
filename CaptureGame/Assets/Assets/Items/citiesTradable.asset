@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f738d67162b37b44e80c547287485a20, type: 3}
   m_Name: citiesTradable
   m_EditorClassIdentifier: 
-  items: {fileID: 0}
-  obj: []
+  items: {fileID: 11400000, guid: ef76ae511e243a74c9e771f34b6c28b1, type: 2}
+  obj:
+  - name: Food
+    id: 0
+    number: 0
+    consumeRate: 10
+    productionRate: 15
+    price: 0
+  - name: Fuel Cell
+    id: 1
+    number: 0
+    consumeRate: 5
+    productionRate: 10
+    price: 0

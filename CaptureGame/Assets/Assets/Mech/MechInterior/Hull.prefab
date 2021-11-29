@@ -1872,6 +1872,7 @@ MonoBehaviour:
   textArea: {fileID: 1139393817499809055}
   mech: {fileID: 0}
   camera: {fileID: 0}
+  tradeables: {fileID: 11400000, guid: ef76ae511e243a74c9e771f34b6c28b1, type: 2}
 --- !u!1 &6914010132259471036
 GameObject:
   m_ObjectHideFlags: 0

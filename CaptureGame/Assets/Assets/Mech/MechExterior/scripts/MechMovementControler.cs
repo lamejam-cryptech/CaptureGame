@@ -126,4 +126,13 @@ public class MechMovementControler : MonoBehaviour
         return this.state;
     }
 
+    public void stop()
+    {
+        this.state = MechState.STOP;
+        distGoal = 0;
+        distTravel = 0;
+        rotatedGoal = 0;
+        rotatedTravel = 0;
+    }
+
 }
